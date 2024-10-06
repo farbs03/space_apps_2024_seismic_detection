@@ -1,14 +1,11 @@
-import pandas
 from eventdetector_ts.metamodel.meta_model import MetaModel
+from eventdetector_ts import FFN
 import numpy as np
 import pandas as pd
 from obspy import read
-from datetime import datetime, timedelta
-import matplotlib.pyplot as plt
-import os
-from scipy import signal
 import hashlib
-from matplotlib import cm
+from datetime import datetime
+
 
 base_dir = "./data/lunar/training"
 data_dir = "data/S12_GradeA"
@@ -19,7 +16,7 @@ times = np.array([])
 velocities = np.array([])
 hashes = set()
 
-for (idx, filename) in enumerate(catalog['filename'][0:1]):
+for (idx, filename) in enumerate(catalog['filename'][0:5]):
     print("----- Reading ", filename, idx, "-----")
     row = catalog.iloc[idx]
     arrival_time = float(row['time_rel(sec)'])
@@ -42,16 +39,17 @@ for (idx, filename) in enumerate(catalog['filename'][0:1]):
         times = np.append(times, st.traces[0].times() + delta)
         velocities = np.append(velocities, st.traces[0].data)
 
-    events.append(arrival_time + delta)
-    events.append(arrival_time + delta + 2)
+    events.append([datetime.utcfromtimestamp(arrival_time + delta), datetime.utcfromtimestamp(arrival_time + delta + 2)])
+    #events.append(arrival_time + delta + 5)
     hashes.add(digest)
 
 print(events)
 print(len(times))
 print(len(velocities))
+print(times[-1] + times[-1] - times[-2])
 
 df = pd.DataFrame({"time": times, "velocity": velocities})
 df["time"] = pd.to_datetime(df["time"], unit='s')
 df.set_index("time", inplace=True)
-meta_model = MetaModel(output_dir="model", dataset=df, events=events, width=2, epochs=5)
+meta_model = MetaModel(output_dir="model", dataset=df, events=events, width=10, models=[(FFN, 1)], epochs=5)
 meta_model.fit()
