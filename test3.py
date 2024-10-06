@@ -59,7 +59,7 @@ def pad_spectrogram(s, target_shape):
 
     return s_padded
 
-difference = 0
+difference = np.array([])
 
 for (idx, filename) in enumerate(catalog['filename']):
     print("----- Reading ", filename, idx, "-----")
@@ -117,7 +117,7 @@ for (idx, filename) in enumerate(catalog['filename']):
     print(f"Max sum: {max_sum}")
     print(f"Actual: {arrival}")
     print(f"Predicted: {predicted}")
-    difference += abs(predicted - arrival)
+    difference = np.append(difference, abs(arrival - predicted))
 
     # Plot the time series and spectrogram
     '''fig = plt.figure(figsize=(10, 10))
@@ -146,4 +146,4 @@ for (idx, filename) in enumerate(catalog['filename']):
     #plt.show()
 
 #print(f"Average difference: {difference / len(catalog['filename'])}")
-print(f"Average difference: {difference / len(hashes)}")
+print(f"Average difference: {np.mean(difference), np.median(difference)}")
