@@ -1,1 +1,0 @@
-{"w_s": 1350, "width_events_s": 1350, "time_unit": "millisecond", "width": 10, "step": 1, "batch_size": 32, "type_training": "average", "fill_nan": "zeros", "output_dir": "/Users/AnishKambhampati/Documents/GitHub.nosync/space_apps_2024_seismic_detection/model", "n_time_steps": 10, "models": ["FFN_0"], "best_combination": [6, 18, 0.0]}
