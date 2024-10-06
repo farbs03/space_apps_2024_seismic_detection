@@ -19,7 +19,7 @@ times = np.array([])
 velocities = np.array([])
 hashes = set()
 
-for (idx, filename) in enumerate(catalog['filename']):
+for (idx, filename) in enumerate(catalog['filename'][0:1]):
     print("----- Reading ", filename, idx, "-----")
     row = catalog.iloc[idx]
     arrival_time = float(row['time_rel(sec)'])
@@ -53,5 +53,5 @@ print(len(velocities))
 df = pd.DataFrame({"time": times, "velocity": velocities})
 df["time"] = pd.to_datetime(df["time"], unit='s')
 df.set_index("time", inplace=True)
-meta_model = MetaModel(output_dir="model", dataset=df, events=events, width=2)
+meta_model = MetaModel(output_dir="model", dataset=df, events=events, width=2, epochs=5)
 meta_model.fit()
